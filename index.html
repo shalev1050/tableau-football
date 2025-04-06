@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analytics Dashboard 📊</title>
+    <style>
+        /* Gradient background and base styles */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        /* Header styles */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-in;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #f1c40f;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-in;
+        }
+
+        h2 {
+            color: #f1c40f;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        /* Tableau container */
+        .tableau-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .tableau-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Analytics stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Data Analytics Hub</h1>
+        <nav>
+            <a href="#home">Home 🏠</a>
+            <a href="#tableau">Tableau 📊</a>
+            <a href="#stats">Stats 📈</a>
+            <a href="#contact">Contact 📬</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section" id="home">
+            <h2>Welcome to Analytics Paradise!</h2>
+            <p>Dive into the world of data with our cutting-edge analytics platform! 
+            Explore insights, visualize trends, and make data-driven decisions with ease. 🎯</p>
+        </div>
+
+        <div class="section" id="tableau">
+            <h2>Tableau Visualization Masterpiece 🎨</h2>
+            <div class="tableau-container">
+                <iframe src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link"
+                    allowfullscreen></iframe>
+            </div>
+            <p>Check out our interactive Tableau dashboard above! Zoom, filter, and explore to your content!</p>
+        </div>
+
+        <div class="section" id="stats">
+            <h2>Key Metrics at a Glance 📈</h2>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <h3>Users 👥</h3>
+                    <p id="user-count">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Revenue 💰</h3>
+                    <p id="revenue-count">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Engagement 📈</h3>
+                    <p id="engage-count">0%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Data Analytics Hub | Made with ☕ | Contact us: analytics@fun.com</p>
+    </footer>
+
+    <script>
+        // Counter animation for stats
+        function animateCounter(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let current = start;
+            let range = end - start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            
+            let timer = setInterval(function() {
+                current += increment;
+                obj.textContent = id === "engage-count" ? `${current}%` : current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        // Start animations when page loads
+        window.onload = function() {
+            animateCounter("user-count", 0, 1250, 2000);
+            animateCounter("revenue-count", 0, 50000, 2000);
+            animateCounter("engage-count", 0, 87, 2000);
+        };
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
