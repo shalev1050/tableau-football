@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Analytics Dashboard 📊</title>
     <style>
-        /* Gradient background and base styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -14,7 +13,6 @@
             color: #ffffff;
         }
 
-        /* Header styles */
         header {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -31,7 +29,6 @@
             animation: fadeInDown 1s ease-in;
         }
 
-        /* Navigation */
         nav {
             padding: 15px;
         }
@@ -50,7 +47,6 @@
             display: inline-block;
         }
 
-        /* Main content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -72,14 +68,14 @@
             margin-bottom: 20px;
         }
 
-        /* Tableau container */
         .tableau-container {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
             overflow: hidden;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background: #fff; /* Fallback color while loading */
         }
 
         .tableau-container iframe {
@@ -91,7 +87,6 @@
             border: none;
         }
 
-        /* Analytics stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -111,30 +106,16 @@
             transform: translateY(-5px);
         }
 
-        /* Animations */
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
@@ -164,8 +145,8 @@
         <div class="section" id="tableau">
             <h2>Tableau Visualization Masterpiece 🎨</h2>
             <div class="tableau-container">
-                <iframe src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link"
-                    allowfullscreen></iframe>
+                <iframe src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:display_count=n&:origin=viz_share_link" 
+                        allowfullscreen></iframe>
             </div>
             <p>Check out our interactive Tableau dashboard above! Zoom, filter, and explore to your content!</p>
         </div>
@@ -194,7 +175,6 @@
     </footer>
 
     <script>
-        // Counter animation for stats
         function animateCounter(id, start, end, duration) {
             let obj = document.getElementById(id);
             let current = start;
@@ -211,14 +191,21 @@
             }, stepTime);
         }
 
-        // Start animations when page loads
         window.onload = function() {
             animateCounter("user-count", 0, 1250, 2000);
             animateCounter("revenue-count", 0, 50000, 2000);
             animateCounter("engage-count", 0, 87, 2000);
+            
+            // Check if iframe loaded
+            const iframe = document.querySelector('.tableau-container iframe');
+            iframe.onload = function() {
+                console.log('Tableau dashboard loaded successfully');
+            };
+            iframe.onerror = function() {
+                console.error('Error loading Tableau dashboard');
+            };
         };
 
-        // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
