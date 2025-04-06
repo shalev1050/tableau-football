@@ -70,18 +70,15 @@
 
         .tableau-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
+            width: 100%;
+            height: 800px; /* Fixed height for tables; adjust as needed */
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            background: #fff; /* Fallback color while loading */
+            background: #fff; /* White fallback while loading */
+            overflow: hidden;
         }
 
         .tableau-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border: none;
@@ -122,6 +119,13 @@
             background: rgba(0, 0, 0, 0.2);
             margin-top: 40px;
         }
+
+        .error-message {
+            display: none;
+            color: #ff4444;
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -145,8 +149,13 @@
         <div class="section" id="tableau">
             <h2>Tableau Visualization Masterpiece 🎨</h2>
             <div class="tableau-container">
-                <iframe src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:display_count=n&:origin=viz_share_link" 
-                        allowfullscreen></iframe>
+                <iframe 
+                    src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:display_count=n&:origin=viz_share_link&:embed=y&:showVizHome=n&:apiID=host0" 
+                    allowfullscreen 
+                    title="Tableau Dashboard"></iframe>
+            </div>
+            <div class="error-message" id="error-message">
+                Oops! The dashboard failed to load. Check your internet connection or the Tableau Public link.
             </div>
             <p>Check out our interactive Tableau dashboard above! Zoom, filter, and explore to your content!</p>
         </div>
@@ -196,14 +205,26 @@
             animateCounter("revenue-count", 0, 50000, 2000);
             animateCounter("engage-count", 0, 87, 2000);
             
-            // Check if iframe loaded
             const iframe = document.querySelector('.tableau-container iframe');
+            const errorMessage = document.getElementById('error-message');
+            
             iframe.onload = function() {
                 console.log('Tableau dashboard loaded successfully');
+                errorMessage.style.display = 'none';
             };
+            
             iframe.onerror = function() {
                 console.error('Error loading Tableau dashboard');
+                errorMessage.style.display = 'block';
             };
+
+            // Timeout to check if iframe content is empty
+            setTimeout(() => {
+                if (!iframe.contentWindow.document.body.innerHTML) {
+                    console.error('Iframe content is empty');
+                    errorMessage.style.display = 'block';
+                }
+            }, 5000);
         };
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
