@@ -71,10 +71,10 @@
         .tableau-container {
             position: relative;
             width: 100%;
-            height: 800px; /* Fixed height for tables; adjust as needed */
+            height: 800px; /* Fixed height for visibility */
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            background: #fff; /* White fallback while loading */
+            background: #fff; /* White fallback */
             overflow: hidden;
         }
 
@@ -125,6 +125,7 @@
             color: #ff4444;
             text-align: center;
             padding: 20px;
+            font-size: 1.2em;
         }
     </style>
 </head>
@@ -155,7 +156,12 @@
                     title="Tableau Dashboard"></iframe>
             </div>
             <div class="error-message" id="error-message">
-                Oops! The dashboard failed to load. Check your internet connection or the Tableau Public link.
+                Unable to load the Tableau dashboard. Please check:
+                <ul style="text-align: left; display: inline-block;">
+                    <li>Your internet connection</li>
+                    <li>Tableau Public permissions (must be public)</li>
+                    <li>Browser console for errors (F12)</li>
+                </ul>
             </div>
             <p>Check out our interactive Tableau dashboard above! Zoom, filter, and explore to your content!</p>
         </div>
@@ -210,7 +216,16 @@
             
             iframe.onload = function() {
                 console.log('Tableau dashboard loaded successfully');
-                errorMessage.style.display = 'none';
+                try {
+                    if (iframe.contentWindow.document.body.innerHTML) {
+                        errorMessage.style.display = 'none';
+                    } else {
+                        throw new Error('Iframe content is empty');
+                    }
+                } catch (e) {
+                    console.error('Load check failed:', e);
+                    errorMessage.style.display = 'block';
+                }
             };
             
             iframe.onerror = function() {
@@ -218,13 +233,18 @@
                 errorMessage.style.display = 'block';
             };
 
-            // Timeout to check if iframe content is empty
+            // Check after a delay
             setTimeout(() => {
-                if (!iframe.contentWindow.document.body.innerHTML) {
-                    console.error('Iframe content is empty');
+                try {
+                    if (!iframe.contentWindow.document.body.innerHTML) {
+                        console.error('Iframe content is empty after timeout');
+                        errorMessage.style.display = 'block';
+                    }
+                } catch (e) {
+                    console.error('Timeout check failed:', e);
                     errorMessage.style.display = 'block';
                 }
-            }, 5000);
+            }, 10000); // Increased to 10s for slower connections
         };
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
