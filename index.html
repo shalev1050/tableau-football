@@ -105,6 +105,16 @@
             transform: translateY(-5px);
         }
 
+        .fallback-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .fallback-link a {
+            color: #f1c40f;
+            text-decoration: underline;
+        }
+
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -149,6 +159,11 @@
                     src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:display_count=n&:origin=viz_share_link&:embed=y&:showVizHome=n&:apiID=host0" 
                     allowfullscreen>
                 </iframe>
+            </div>
+            <div class="fallback-link">
+                <p>If the dashboard doesn't load, view it directly: 
+                    <a href="https://public.tableau.com/views/Book2_17425545600930/Dashboard2" target="_blank">here</a>
+                </p>
             </div>
         </div>
 
@@ -197,25 +212,18 @@
             animateCounter("revenue-count", 0, 50000, 2000);
             animateCounter("engage-count", 0, 87, 2000);
 
-            // Check if Tableau iframe loads correctly
             const iframe = document.querySelector('.tableau-container iframe');
-            iframe.addEventListener('error', () => {
-                alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
+
+            // Log when the iframe successfully loads
+            iframe.addEventListener('load', () => {
+                console.log('Tableau dashboard loaded successfully');
             });
 
-            // Optional: Check if iframe content is loaded (basic check)
-            setTimeout(() => {
-                try {
-                    const content = iframe.contentWindow.document.body.innerHTML;
-                    if (!content || content.length === 0) {
-                        console.error('Iframe content is empty after timeout');
-                        alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
-                    }
-                } catch (e) {
-                    console.error('Iframe load check failed:', e.message);
-                    alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
-                }
-            }, 10000);
+            // Alert if there's a critical loading error
+            iframe.addEventListener('error', () => {
+                console.error('Tableau dashboard failed to load');
+                alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
+            });
         };
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
