@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Analytics Dashboard 📊</title>
-    <!-- Load Tableau Embedding API v3 -->
-    <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -72,17 +70,20 @@
 
         .tableau-container {
             position: relative;
-            width: 100%;
-            height: 800px;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            background: #fff;
-            overflow: hidden;
         }
 
-        tableau-viz {
+        .tableau-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            border: none;
         }
 
         .stats-grid {
@@ -120,30 +121,6 @@
             background: rgba(0, 0, 0, 0.2);
             margin-top: 40px;
         }
-
-        .error-message {
-            display: none;
-            color: #ff4444;
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-        }
-
-        .error-message a {
-            color: #f1c40f;
-            text-decoration: underline;
-        }
-
-        .fallback-link {
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-        }
-
-        .fallback-link a {
-            color: #f1c40f;
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -166,31 +143,13 @@
 
         <div class="section" id="tableau">
             <h2>Tableau Visualization Masterpiece 🎨</h2>
-            <div class="tableau-container" id="tableau-container">
-                <!-- Use Tableau Embedding API v3 web component -->
-                <tableau-viz id="tableauViz"
-                             src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2"
-                             height="800px"
-                             width="100%"
-                             toolbar="bottom"
-                             hide-tabs>
-                </tableau-viz>
+            <p>Check out our interactive Tableau dashboard below! Zoom, filter, and explore to your content!</p>
+            <div class="tableau-container">
+                <iframe 
+                    src="https://public.tableau.com/views/Book2_17425545600930/Dashboard2?:language=en-US&:display_count=n&:origin=viz_share_link&:embed=y&:showVizHome=n&:apiID=host0" 
+                    allowfullscreen>
+                </iframe>
             </div>
-            <div class="error-message" id="error-message">
-                Unable to load the Tableau dashboard. Please check:
-                <ul style="text-align: left; display: inline-block;">
-                    <li>Your internet connection</li>
-                    <li>Tableau Public permissions (must be public)</li>
-                    <li>Browser console for errors (F12)</li>
-                    <li>Or view the dashboard directly: <a href="https://public.tableau.com/views/Book2_17425545600930/Dashboard2" target="_blank">here</a></li>
-                </ul>
-            </div>
-            <div class="fallback-link" id="fallback-link" style="display: none;">
-                <p>Unable to embed the dashboard. View it directly: 
-                    <a href="https://public.tableau.com/views/Book2_17425545600930/Dashboard2" target="_blank">Click here</a>
-                </p>
-            </div>
-            <p>Check out our interactive Tableau dashboard above! Zoom, filter, and explore to your content!</p>
         </div>
 
         <div class="section" id="stats">
@@ -237,34 +196,24 @@
             animateCounter("user-count", 0, 1250, 2000);
             animateCounter("revenue-count", 0, 50000, 2000);
             animateCounter("engage-count", 0, 87, 2000);
-            
-            const tableauViz = document.getElementById('tableauViz');
-            const errorMessage = document.getElementById('error-message');
-            const tableauContainer = document.getElementById('tableau-container');
-            const fallbackLink = document.getElementById('fallback-link');
 
-            // Listen for the viz to load
-            tableauViz.addEventListener('firstinteractive', () => {
-                console.log('Tableau dashboard loaded successfully');
-                errorMessage.style.display = 'none';
-                fallbackLink.style.display = 'none';
+            // Check if Tableau iframe loads correctly
+            const iframe = document.querySelector('.tableau-container iframe');
+            iframe.addEventListener('error', () => {
+                alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
             });
 
-            // Listen for errors
-            tableauViz.addEventListener('error', (e) => {
-                console.error('Tableau dashboard failed to load:', e);
-                errorMessage.style.display = 'block';
-                tableauContainer.style.display = 'none';
-                fallbackLink.style.display = 'block';
-            });
-
-            // Fallback if the viz doesn't load within 10 seconds
+            // Optional: Check if iframe content is loaded (basic check)
             setTimeout(() => {
-                if (!tableauViz.viz) {
-                    console.error('Tableau dashboard did not load within timeout');
-                    errorMessage.style.display = 'block';
-                    tableauContainer.style.display = 'none';
-                    fallbackLink.style.display = 'block';
+                try {
+                    const content = iframe.contentWindow.document.body.innerHTML;
+                    if (!content || content.length === 0) {
+                        console.error('Iframe content is empty after timeout');
+                        alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
+                    }
+                } catch (e) {
+                    console.error('Iframe load check failed:', e.message);
+                    alert('Oops! Tableau dashboard failed to load. Please check the link or try again later. 😅');
                 }
             }, 10000);
         };
